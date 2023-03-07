@@ -2,15 +2,16 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  ShareOutlined,
+  DeleteOutlined
 } from "@mui/icons-material";
+// import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import { setPost, setPosts } from "state";
 import moment from "moment";
 
 const PostWidget = ({
@@ -47,9 +48,22 @@ const PostWidget = ({
       },
       body: JSON.stringify({ userId: loggedInUserId }),
     });
-    const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    const updatedPosts = await response.json();
+    dispatch(setPost({ post: updatedPosts }));
   };
+
+  const deletePost = async () => {
+    const response = await fetch(`http://localhost:3001/posts/${postId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: loggedInUserId }),
+    });
+    const updatedPost = await response.json();
+    dispatch(setPosts({ posts: updatedPost }));
+  }
 
   return (
     <WidgetWrapper m="0 0 2rem 0">
@@ -96,8 +110,12 @@ const PostWidget = ({
           </FlexBetween>
         </FlexBetween>
 
-        <IconButton>
-          <ShareOutlined />
+        <IconButton onClick={deletePost}>
+          { loggedInUserId === postUserId ? (
+              <DeleteOutlined />
+            ) : null
+          }  
+
         </IconButton>
       </FlexBetween>
       {isComments && (

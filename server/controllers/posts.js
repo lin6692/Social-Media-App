@@ -80,3 +80,30 @@ export const likePost = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+/* DELETE */
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+    const post = await Post.findById(id);
+
+    if (userId !== post.userId) {
+      res
+        .status(404)
+        .json({ message: "Only post creator can delete the post." });
+    }
+
+    const result = await Post.deleteOne(post);
+
+    if (result.deletedCount !== 1) {
+      res.status(404).json({ message: "No Post Found" });
+    }
+
+    const updatedPost = await Post.find();
+    updatedPost.sort(sortFunc);
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
