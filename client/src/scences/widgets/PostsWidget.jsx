@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 
+
 const PostsWidget = ({ userId, isProfile = false }) => {
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
-  const [posts, setPosts] = useState([])
+  const posts = useSelector((state) => state.posts);
 
   const getPosts = async () => {
     const response = await fetch("http://localhost:3001/posts", {
@@ -12,8 +15,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
-    console.log(`data is ${data}`)
-    setPosts(data);
+    dispatch(setPosts({ posts:data }));
   };
 
   const getUserPosts = async () => {
@@ -25,7 +27,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       }
     );
     const data = await response.json();
-    setPosts(data);
+    dispatch(setPosts({ posts:data }));
   };
 
   useEffect(() => {
@@ -36,7 +38,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  console.log(`posts is: ${posts.error}`);
   return (
     <>
       {posts.map(
@@ -51,6 +52,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           userPicturePath,
           likes,
           comments,
+          createdAt
         }) => (
           <PostWidget
             key={_id}
@@ -63,6 +65,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             userPicturePath={userPicturePath}
             likes={likes}
             comments={comments}
+            createdAt={createdAt}
           />
         )
       )}

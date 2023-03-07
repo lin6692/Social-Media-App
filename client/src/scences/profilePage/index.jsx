@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Navbar from "scences/navbar";
 import FriendListWidget from "scences/widgets/FriendListWidget";
-import MyPostWidget from "scences/widgets/MyPostWidget";
 import PostsWidget from "scences/widgets/PostsWidget";
 import UserWidget from "scences/widgets/UserWidget";
 
@@ -48,8 +47,6 @@ const ProfilePage = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <MyPostWidget picturePath={user.picturePath} />
-          <Box m="2rem 0" />
           <PostsWidget userId={userId} isProfile />
         </Box>
       </Box>

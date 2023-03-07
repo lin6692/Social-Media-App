@@ -1,6 +1,12 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
+const sortFunc = (post1, post2) => {
+  let dateA = new Date(post1.createdAt).valueOf();
+  let dateB = new Date(post2.createdAt).valueOf();
+  return dateA < dateB ? 1 : -1;
+};
+
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
@@ -20,6 +26,7 @@ export const createPost = async (req, res) => {
     await newPost.save();
 
     const post = await Post.find();
+    post.sort(sortFunc);
     res.status(201).json(post);
   } catch (err) {
     res.status(409).json({ message: err.message });
@@ -30,6 +37,7 @@ export const createPost = async (req, res) => {
 export const getFeedPosts = async (req, res) => {
   try {
     const post = await Post.find();
+    post.sort(sortFunc);
     res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -40,6 +48,7 @@ export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
     const post = await Post.find({ userId });
+    post.sort(sortFunc);
     res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ message: err.message });
