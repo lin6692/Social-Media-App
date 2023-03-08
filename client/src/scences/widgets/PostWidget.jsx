@@ -2,17 +2,20 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  DeleteOutlined
+  DeleteOutlined,
+  HighlightOff,
+  AddComment
 } from "@mui/icons-material";
-// import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Divider, IconButton, Typography, useTheme, InputBase } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
+import UserImage from "components/UserImage";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost, setPosts } from "state";
 import moment from "moment";
+
 
 const PostWidget = ({
   postId,
@@ -23,13 +26,15 @@ const PostWidget = ({
   picturePath,
   userPicturePath,
   likes,
-  comments,
   createdAt,
 }) => {
   const [isComments, setIsComments] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
+  const loggedInUserPicturePath = useSelector((state) => state.user.picturePath);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
   const createdTime = moment(createdAt).fromNow();
@@ -64,6 +69,50 @@ const PostWidget = ({
     const updatedPost = await response.json();
     dispatch(setPosts({ posts: updatedPost }));
   }
+
+  const addComments = async () => {
+    const response = await fetch(`http://localhost:3001/posts/${postId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+       "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: loggedInUserId, description:comment }),
+    })
+
+    const updatedComments = await response.json();
+    setComments(updatedComments);
+    setComment("");
+  }
+
+  const getComments = async () => {
+    const response = await fetch(`http://localhost:3001/posts/${postId}/comments`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }
+    });
+    const updatedComments = await response.json();
+    setComments(updatedComments);
+  }
+
+  const deleteComment = async (commentId) => {
+    const response = await fetch(`http://localhost:3001/posts/${postId}/comment`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: loggedInUserId, commentId: commentId}),
+    })
+    const updatedComments = await response.json();
+    setComments(updatedComments);
+  }
+
+  useEffect(() => {
+    getComments();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <WidgetWrapper m="0 0 2rem 0">
@@ -108,6 +157,7 @@ const PostWidget = ({
             </IconButton>
             <Typography>{comments.length}</Typography>
           </FlexBetween>
+          
         </FlexBetween>
 
         <IconButton onClick={deletePost}>
@@ -115,16 +165,39 @@ const PostWidget = ({
               <DeleteOutlined />
             ) : null
           }  
-
         </IconButton>
+
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">
+          <FlexBetween gap="0.5rem">
+            <UserImage image={loggedInUserPicturePath} size={"40px"}/>
+            <InputBase
+              placeholder="What's on your mind..."
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+              sx={{
+                width: "100%",
+                backgroundColor: palette.neutral.light,
+                borderRadius: "1rem",
+                padding: "0.5rem 1rem",
+                margin: "0.5rem 0"
+              }}
+            />
+            <IconButton>      
+                <AddComment onClick={() => addComments()}/>
+            </IconButton>
+          </FlexBetween>
           {comments.map((comment, i) => (
             <Box key={`${name}-${i}`}>
               <Divider />
               <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
+                {comment.description}
+                { loggedInUserId === comment.userId || postUserId === comment.userId ? (
+                  <IconButton onClick={() => deleteComment(comment._id)}>      
+                    <HighlightOff />
+                  </IconButton>
+                ): null}
               </Typography>
             </Box>
           ))}

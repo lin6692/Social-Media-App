@@ -11,6 +11,23 @@ const userIds = [
   new mongoose.Types.ObjectId(),
 ];
 
+const postIds = [
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+];
+
+const commentIds = [
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+];
+
 export const users = [
   {
     _id: userIds[0],
@@ -144,7 +161,7 @@ export const users = [
 
 export const posts = [
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[0],
     userId: userIds[1],
     firstName: "Steve",
     lastName: "Ralph",
@@ -158,14 +175,10 @@ export const posts = [
       [userIds[3], true],
       [userIds[4], true],
     ]),
-    comments: [
-      "random comment",
-      "another random comment",
-      "yet another random comment",
-    ],
+    comments: [commentIds[0], commentIds[2], commentIds[4]],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[1],
     userId: userIds[3],
     firstName: "Whatcha",
     lastName: "Doing",
@@ -180,15 +193,10 @@ export const posts = [
       [userIds[1], true],
       [userIds[2], true],
     ]),
-    comments: [
-      "one more random comment",
-      "and another random comment",
-      "no more random comments",
-      "I lied, one more random comment",
-    ],
+    comments: [commentIds[1]],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[2],
     userId: userIds[4],
     firstName: "Jane",
     lastName: "Doe",
@@ -203,16 +211,10 @@ export const posts = [
       [userIds[3], true],
       [userIds[5], true],
     ]),
-    comments: [
-      "one more random comment",
-      "I lied, one more random comment",
-      "I lied again, one more random comment",
-      "Why am I doing this?",
-      "I'm bored",
-    ],
+    comments: [commentIds[3]],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[3],
     userId: userIds[5],
     firstName: "Harvey",
     lastName: "Dunn",
@@ -226,17 +228,10 @@ export const posts = [
       [userIds[6], true],
       [userIds[3], true],
     ]),
-    comments: [
-      "I lied again, one more random comment",
-      "Why am I doing this?",
-      "I'm bored",
-      "I'm still bored",
-      "All I want to do is play video games",
-      "I'm going to play video games",
-    ],
+    comments: [],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[4],
     userId: userIds[6],
     firstName: "Carly",
     lastName: "Vowel",
@@ -251,16 +246,10 @@ export const posts = [
       [userIds[5], true],
       [userIds[7], true],
     ]),
-    comments: [
-      "I lied again, one more random comment",
-      "Why am I doing this?",
-      "Man I'm bored",
-      "What should I do?",
-      "I'm going to play video games",
-    ],
+    comments: [],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[5],
     userId: userIds[7],
     firstName: "Jessica",
     lastName: "Dunn",
@@ -274,12 +263,39 @@ export const posts = [
       [userIds[2], true],
     ]),
 
-    comments: [
-      "Can I play video games now?",
-      "No let's actually study",
-      "Never mind, I'm going to play video games",
-      "Stop it.",
-      "Michael, stop it.",
-    ],
+    comments: [],
+  },
+];
+
+export const comments = [
+  {
+    _id: commentIds[0],
+    postId: postIds[0],
+    userId: userIds[0],
+    description: "random comment",
+  },
+  {
+    _id: commentIds[1],
+    postId: postIds[1],
+    userId: userIds[1],
+    description: "another random comment",
+  },
+  {
+    _id: commentIds[2],
+    postId: postIds[0],
+    userId: userIds[2],
+    description: "yet another random comment",
+  },
+  {
+    _id: commentIds[3],
+    postId: postIds[2],
+    userId: userIds[3],
+    description: "Why am I doing this?",
+  },
+  {
+    _id: commentIds[4],
+    postId: postIds[0],
+    userId: userIds[4],
+    description: "one more random comment",
   },
 ];
