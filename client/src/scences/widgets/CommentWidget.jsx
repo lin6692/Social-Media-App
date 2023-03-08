@@ -16,16 +16,19 @@ import {
   import { setPost, setPosts } from "state";
   import moment from "moment";
 
-  const CommentWidget = (
+  const CommentWidget = ({
     comment,
     deleteCommentCallback
-  ) => {
+}) => {
     const loggedInUserId = useSelector((state) => state.user._id);
+
     const token = useSelector((state) => state.token);
     const [commenter, setCommenter] = useState({});
 
     const { palette } = useTheme();
+    const createdTime = moment(comment.createdAt).format('MMMM Do YYYY, h:mm a');;
 
+    
     const getCommenter = async () => {
         const response = await fetch(
             `http://localhost:3001/users/${comment.userId}`,
@@ -44,17 +47,33 @@ import {
 
 
     return (
-        <Box key={comment._id}>
+     
+        <FlexBetween key={comment._id} sx={{margin:"0.5rem 0"}}>
             <UserImage image={commenter.picturePath} size={"40px"}/>
-            <Typography sx={{ color: palette.neutral.main, m: "0.5rem 0", pl: "1rem" }}>
-            {comment.description}
+            <Box width={"100%"} padding={"0 0 0 0.7rem"}>
+                <Box component="span" sx={{ display: 'inlineblock' }}>
+                    {`${commenter.firstName} ${commenter.lastName}`}  
+                </Box>
+                <Box component="span" sx={{ 
+                    display: 'inlineblock', 
+                    color: palette.neutral.medium, 
+                    fontSize:"0.7rem"}}
+                >
+                {` @ ${createdTime}`}
+                </Box>
+
+                <Typography sx={{ color: palette.neutral.main, width:"80%"}}>
+                {comment.description}
+                
+                </Typography>
+            </Box>
             { loggedInUserId === comment.userId ? (
-                <IconButton onClick={() => deleteCommentCallback(comment._id)}>      
-                    <HighlightOff />
-                </IconButton>): null}
-            </Typography>
+                    <IconButton onClick={() => deleteCommentCallback(comment._id)}>      
+                        <HighlightOff />
+                    </IconButton>): null}
             <Divider />
-        </Box>    
+        </FlexBetween>
+ 
     )
 
   }

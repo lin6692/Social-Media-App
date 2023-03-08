@@ -11,6 +11,7 @@ import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import UserImage from "components/UserImage";
+import CommentWidget from "./CommentWidget";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost, setPosts } from "state";
@@ -184,22 +185,12 @@ const PostWidget = ({
                 margin: "0.5rem 0"
               }}
             />
-            <IconButton>      
-                <AddComment onClick={() => addComments()}/>
+            <IconButton disabled={!comment} onClick={() => addComments()}>      
+                <AddComment/>
             </IconButton>
           </FlexBetween>
           {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment.description}
-                { loggedInUserId === comment.userId || postUserId === comment.userId ? (
-                  <IconButton onClick={() => deleteComment(comment._id)}>      
-                    <HighlightOff />
-                  </IconButton>
-                ): null}
-              </Typography>
-            </Box>
+            <CommentWidget key={i} comment={comment} deleteCommentCallback={deleteComment}/>
           ))}
           <Divider />
         </Box>
