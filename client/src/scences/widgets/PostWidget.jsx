@@ -3,7 +3,6 @@ import {
   FavoriteBorderOutlined,
   FavoriteOutlined,
   DeleteOutlined,
-  HighlightOff,
   AddComment
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme, InputBase } from "@mui/material";

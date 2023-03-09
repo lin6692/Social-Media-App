@@ -8,32 +8,25 @@ import { Box, Typography, Divider, useTheme } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const UserWidget = ({ userId, picturePath }) => {
+const UserWidget = ({ 
+    userId,
+    firstName,
+    lastName,
+    location,
+    occupation,
+    viewedProfile,
+    impressions,
+    friends, 
+    picturePath
+}) => {
 
-    const user = useSelector((state) => state.user);
     const { palette } = useTheme();
     const navigate = useNavigate();
     const dark = palette.neutral.dark;
     const medium = palette.neutral.medium;
     const main = palette.neutral.main;
-
-
-    if (!user) {
-        return null;
-    };
-
-    const {
-        firstName,
-        lastName,
-        location,
-        occupation,
-        viewedProfile,
-        impressions,
-        friends,
-    } = user;
 
     return (
         <WidgetWrapper>
@@ -41,7 +34,7 @@ const UserWidget = ({ userId, picturePath }) => {
             <FlexBetween
                 gap="0.5rem"
                 pd="1.1rem"
-                onClick={() => navigate(`/profile/${userId}`)}
+                
             >
                 <FlexBetween gap="1rem">
                     <UserImage image={picturePath} />
@@ -55,7 +48,9 @@ const UserWidget = ({ userId, picturePath }) => {
                                     color: palette.primary.light,
                                     cursor: "pointer"
                                 }
-                            }}>
+                            }}
+                            onClick={() => navigate(`/profile/${userId}`)}
+                            >
                                 {firstName} {lastName}
                         </Typography> 
                         <Typography color={medium}>{friends ? friends.length : 0 } friends</Typography>       

@@ -51,7 +51,6 @@ export const createPostComment = async (req, res) => {
     await post.save();
 
     const comments = await Comment.find({ postId: id });
-    comments.sort(sortFunc);
     res.status(200).json(comments);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -84,7 +83,6 @@ export const getPostComments = async (req, res) => {
   try {
     const { id } = req.params;
     const comments = await Comment.find({ postId: id });
-    comments.sort(sortFunc);
     res.status(200).json(comments);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -129,7 +127,6 @@ export const deletePost = async (req, res) => {
         .status(404)
         .json({ message: "Only post creator can delete the post." });
     }
-
     const result = await Post.deleteOne(post);
 
     if (result.deletedCount !== 1) {
@@ -169,7 +166,6 @@ export const deleteComment = async (req, res) => {
     }
 
     const comments = await Comment.find({ postId: id });
-    comments.sort(sortFunc);
     res.status(200).json(comments);
   } catch (err) {
     res.status(404).json({ message: err.message });
