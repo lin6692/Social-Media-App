@@ -12,8 +12,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import UserImage from "components/UserImage";
 import CommentWidget from "./CommentWidget";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPost, setPosts } from "state";
+import { useSelector } from "react-redux";
 import moment from "moment";
 
 
@@ -27,11 +26,12 @@ const PostWidget = ({
   userPicturePath,
   likes,
   createdAt,
+  patchLikeCallback,
+  deletePostCallback
 }) => {
   const [isComments, setIsComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
-  const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const loggedInUserPicturePath = useSelector((state) => state.user.picturePath);
@@ -43,32 +43,6 @@ const PostWidget = ({
   const main = palette.neutral.main;
   const primary = palette.primary.main;
   const medium = palette.neutral.medium;
-
-  const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId }),
-    });
-    const updatedPosts = await response.json();
-    dispatch(setPost({ post: updatedPosts }));
-  };
-
-  const deletePost = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId }),
-    });
-    const updatedPost = await response.json();
-    dispatch(setPosts({ posts: updatedPost }));
-  }
 
   const addComments = async () => {
     const response = await fetch(`http://localhost:3001/posts/${postId}`, {
@@ -141,7 +115,7 @@ const PostWidget = ({
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={patchLike}>
+            <IconButton onClick={() => patchLikeCallback(postId)}>
               {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
@@ -160,7 +134,7 @@ const PostWidget = ({
           
         </FlexBetween>
 
-        <IconButton onClick={deletePost}>
+        <IconButton onClick={() => deletePostCallback(postId)}>
           { loggedInUserId === postUserId ? (
               <DeleteOutlined />
             ) : null

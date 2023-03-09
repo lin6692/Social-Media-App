@@ -8,6 +8,15 @@ const sortFunc = (post1, post2) => {
   return dateA < dateB ? 1 : -1;
 };
 
+const deleteComments = async (comments) => {
+  comments.map(async (comment) => {
+    let result = await Comment.deleteOne({ _id: comment });
+    if (result.deletedCount !== 1) {
+      res.status(404).json({ message: "No Comment Found" });
+    }
+  });
+};
+
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
@@ -127,15 +136,15 @@ export const deletePost = async (req, res) => {
         .status(404)
         .json({ message: "Only post creator can delete the post." });
     }
-    const result = await Post.deleteOne(post);
 
+    await deleteComments(post.comments);
+
+    const result = await Post.deleteOne(post);
     if (result.deletedCount !== 1) {
       res.status(404).json({ message: "No Post Found" });
     }
 
-    const updatedPost = await Post.find();
-    updatedPost.sort(sortFunc);
-    res.status(200).json(updatedPost);
+    res.status(200).json({ message: "Post deleted." });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

@@ -13,6 +13,7 @@ const ProfilePage = () => {
   const token = useSelector((state) => state.token);
   const [user, setUser] = useState(null);
   const [isLoggedUser, setIsLoggedUser] = useState(false);
+  const friends = useSelector((state) => state.user.friends);
 
 
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -43,7 +44,6 @@ const ProfilePage = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
-    console.log("no user!!!");
     return null;
   }
 
@@ -66,7 +66,7 @@ const ProfilePage = () => {
             occupation={user.occupation}
             viewedProfile={user.viewedProfile}
             impressions={user.impressions}
-            friends={user.friends}
+            friends={friends}
             picturePath={user.picturePath}
           />
           <Box m="2rem 0" />
@@ -76,7 +76,7 @@ const ProfilePage = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <PostsWidget userId={userId} isProfile />
+          <PostsWidget userId={userId} isProfile={true} />
         </Box>
       </Box>
     </Box>
