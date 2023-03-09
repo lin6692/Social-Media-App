@@ -18,7 +18,7 @@ export const register = async (req, res) => {
 
     const dupUser = User.findOne({ email });
     if (dupUser) {
-      res.status(500).json({
+      return res.status(500).json({
         message: "User Exist",
         resgistered: true,
         title: "Invalid Email Address",
@@ -26,7 +26,6 @@ export const register = async (req, res) => {
           "The email address has already been used. An email can only be used on one Social Media account at a time.",
         button: "OK, I will try another email.",
       });
-      return;
     }
 
     const salt = await bcrypt.genSalt();
@@ -56,14 +55,32 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
-    if (!user) return res.status(400).json({ msg: "User does not exist. " });
+    if (!user)
+      return res.status(400).json({
+        message: "User Not Found",
+        logged: false,
+        title: "User Not Found",
+        context: "User Not Found. Enter a different account",
+        button: "OK",
+      });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
+    if (!isMatch)
+      return res.status(400).json({
+        message: "Invalid credentials",
+        logged: false,
+        title: "Invalid credentials",
+        context: "Wrong password! Try again.",
+        button: "OK",
+      });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     delete user.password;
-    res.status(200).json({ token, user });
+    res.status(200).json({
+      logged: true,
+      token,
+      user,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

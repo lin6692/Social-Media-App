@@ -83,6 +83,16 @@ const Form = ({
         const loggedIn = await auth.login(values);
         onSubmitProps.resetForm();
 
+        if (!loggedIn.logged) {
+            handleDialogContentCallback(
+                loggedIn.title,
+                loggedIn.context,
+                loggedIn.button
+            )
+            handleDialogCallback();
+            return
+        }
+
         if (loggedIn) {
             dispatch(
                 setLogin({
