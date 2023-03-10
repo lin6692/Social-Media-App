@@ -7,7 +7,7 @@ import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import User from "controllers/User";
 
-const Friend = ({ friend, handleFriendsCallback=null, user }) => {
+const Friend = ({ friend }) => {
   const userApi = new User();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,16 +24,9 @@ const Friend = ({ friend, handleFriendsCallback=null, user }) => {
   const isFriend = loggedUser.friends.find((userFriend) => userFriend._id === friend._id);
 
   const patchFriend = async () => {
-    const data = await userApi.patchFriend(user._id, token, friend._id);
+    const data = await userApi.patchFriend(loggedUser._id, token, friend._id);
     // Update current user friends
     dispatch(setFriends({ friends: data }));
-
-    // For profile page -> update profileUser friends list
-    if (user._id !== loggedUser._id) {
-      const userFriends = await userApi.getFriends(user._id, token)
-      if (handleFriendsCallback) {
-        handleFriendsCallback(userFriends);
-      }}
   };
 
   return (

@@ -5,6 +5,7 @@ import {
     WorkOutlineOutlined,
 } from "@mui/icons-material";
 import { Box, Typography, Divider, useTheme } from "@mui/material";
+import { useSelector } from "react-redux";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -20,8 +21,10 @@ const UserWidget = ({
     impressions,
     friends, 
     picturePath,
-    isHome
 }) => {
+    const loggedUser = useSelector((state) => state.user);
+    const isLoggedUser = userId === loggedUser._id;
+
     const { palette } = useTheme();
     const navigate = useNavigate();
     const dark = palette.neutral.dark;
@@ -55,7 +58,8 @@ const UserWidget = ({
                         <Typography color={medium}>{friends ? friends.length : 0 } friends</Typography>       
                     </Box>
                 </FlexBetween>
-                {isHome && (<ManageAccountsOutlined />)}
+                {isLoggedUser && (<ManageAccountsOutlined />)}
+               
             </FlexBetween>
 
             <Divider sx={{ margin: "1.25rem 0 0 0" }}/>
@@ -107,7 +111,7 @@ const UserWidget = ({
                             <Typography color={medium}>Social Network</Typography>
                         </Box>
                     </FlexBetween>
-                    {isHome && <EditOutlined sx={{ color: main }} />}
+                    {isLoggedUser && <EditOutlined sx={{ color: main }} />}
                 </FlexBetween>
 
                 <FlexBetween gap="1rem">
@@ -120,7 +124,7 @@ const UserWidget = ({
                             <Typography color={medium}>Network Platform</Typography>
                         </Box>
                     </FlexBetween>
-                    {isHome && <EditOutlined sx={{ color: main }} />}
+                    {isLoggedUser && <EditOutlined sx={{ color: main }} />}
                 </FlexBetween>
             </Box>
 

@@ -47,7 +47,6 @@ const HomePage = () => {
             impressions={user.impressions}
             friends={user.friends}
             picturePath={user.picturePath}
-            isHome={true}
           />
         </Box>
         <Box
@@ -61,7 +60,7 @@ const HomePage = () => {
           <Box flexBasis="26%">
             <AdvertWidget />
             <Box m="2rem 0" />
-            <FriendListWidget friends={user.friends} user={user} />
+            <FriendListWidget friends={user.friends}/>
           </Box>
         )}
       </Box>

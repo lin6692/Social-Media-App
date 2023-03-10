@@ -2,7 +2,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 
-const FriendListWidget = ({ friends, handleFriendsCallback=null, user}) => {
+const FriendListWidget = ({ friends }) => {
 
   const { palette } = useTheme();
 
@@ -21,8 +21,6 @@ const FriendListWidget = ({ friends, handleFriendsCallback=null, user}) => {
               <Friend
                 key={i}
                 friend={friend}
-                handleFriendsCallback={handleFriendsCallback}
-                user={user}
               />
           )))}
       </Box>

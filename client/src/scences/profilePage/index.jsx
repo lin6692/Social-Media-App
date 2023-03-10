@@ -18,7 +18,7 @@ const ProfilePage = () => {
 
   const [user, setUser] = useState(loggedUser);
   const [isLoggedUser, setIsLoggedUser] = useState(true);
-  const [friends, setUserFriends] = useState(loggedUser.friends);
+  const [friends, setFriends] = useState(loggedUser.friends);
 
   
   const handleUser = async () => {
@@ -27,12 +27,12 @@ const ProfilePage = () => {
       const updateFriends = await userApi.getFriends(userId, token);
       setUser(updatedUser);
       setIsLoggedUser(false);
-      setUserFriends(updateFriends); 
+      setFriends(updateFriends); 
     }
   }
 
   const handleFriends = (newfriends) =>{
-    setUserFriends(newfriends);
+    setFriends(newfriends);
   } 
 
   useEffect(() => {
@@ -64,10 +64,10 @@ const ProfilePage = () => {
             impressions={user.impressions}
             friends={friends}
             picturePath={user.picturePath}
-            isHome={false}
+            handleFriendsCallback={handleFriends}
           />
           <Box m="2rem 0" />
-          <FriendListWidget friends={friends} handleFriendsCallback={handleFriends} user={user}/>
+          <FriendListWidget friends={friends}/>
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}

@@ -16,7 +16,7 @@ export const register = async (req, res) => {
       occupation,
     } = req.body;
 
-    const dupUser = User.findOne({ email });
+    const dupUser = await User.findOne({ email: email }).exec();
     if (dupUser) {
       return res.status(500).json({
         message: "User Exist",
