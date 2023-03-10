@@ -24,16 +24,22 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+import Post from "controllers/Post";
 
 const MyPostWidget = ({ picturePath }) => {
+  const postApi = new Post();
   const dispatch = useDispatch();
+  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
-  const { palette } = useTheme();
+  
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const posts = useSelector((state) => state.posts);
+  
+  const { palette } = useTheme();
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
 
@@ -46,13 +52,9 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
 
-    const response = await fetch(`http://localhost:3001/posts`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
-    const posts = await response.json();
-    dispatch(setPosts({ posts }));
+    const newPost = await postApi.createPost(token, formData);
+    const newPosts = [newPost, ...posts];
+    dispatch(setPosts({posts: newPosts}));
     setImage(null);
     setPost("");
   };

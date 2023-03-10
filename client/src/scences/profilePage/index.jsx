@@ -6,41 +6,37 @@ import Navbar from "scences/navbar";
 import FriendListWidget from "scences/widgets/FriendListWidget";
 import PostsWidget from "scences/widgets/PostsWidget";
 import UserWidget from "scences/widgets/UserWidget";
+import User from "controllers/User";
 
 const ProfilePage = () => {
+  const userApi = new User();
   const { userId } = useParams();
-  const loggedUser = useSelector((state) => state.user);
-  const token = useSelector((state) => state.token);
-  const [user, setUser] = useState(null);
-  const [isLoggedUser, setIsLoggedUser] = useState(false);
-  const friends = useSelector((state) => state.user.friends);
-
-
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
+  const loggedUser = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
+
+  const [user, setUser] = useState(loggedUser);
+  const [isLoggedUser, setIsLoggedUser] = useState(true);
+  const [friends, setUserFriends] = useState(loggedUser.friends);
+
+  
   const handleUser = async () => {
-    if (userId === loggedUser._id) {
-      setUser(loggedUser)
-      setIsLoggedUser(true);
-    } else {
-      await getUser();
+    if (userId !== loggedUser._id) {
+      const updatedUser = await userApi.getUser(userId, token);
+      const updateFriends = await userApi.getFriends(userId, token);
+      setUser(updatedUser);
+      setIsLoggedUser(false);
+      setUserFriends(updateFriends); 
     }
   }
 
-  const getUser = async () => {
-    const response = await fetch(
-        `http://localhost:3001/users/${userId}`,
-        {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const updatedUser = await response.json();
-      setUser(updatedUser);
-  }
+  const handleFriends = (newfriends) =>{
+    setUserFriends(newfriends);
+  } 
 
   useEffect(() => {
-    handleUser()
+    handleUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
@@ -68,15 +64,16 @@ const ProfilePage = () => {
             impressions={user.impressions}
             friends={friends}
             picturePath={user.picturePath}
+            isHome={false}
           />
           <Box m="2rem 0" />
-          <FriendListWidget userId={userId} />
+          <FriendListWidget friends={friends} handleFriendsCallback={handleFriends} user={user}/>
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <PostsWidget userId={userId} isProfile={true} />
+          <PostsWidget userId={userId} isProfile={true}/>
         </Box>
       </Box>
     </Box>

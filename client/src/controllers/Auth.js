@@ -1,4 +1,3 @@
-// TODO: Error Handling
 export default class Auth {
   async createUser(data) {
     const savedUserResponse = await fetch(

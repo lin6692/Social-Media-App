@@ -1,19 +1,34 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "scences/navbar";
 import UserWidget from "scences/widgets/UserWidget";
 import MyPostWidget from "scences/widgets/MyPostWidget";
 import PostsWidget from "scences/widgets/PostsWidget";
 import AdvertWidget from "scences/widgets/AdvertWidget";
 import FriendListWidget from "scences/widgets/FriendListWidget";
+import User from "controllers/User";
+import { useEffect } from "react";
+import { setFriends } from "state";
 
 const HomePage = () => {
+  const userApi = new User();
+  const dispatch = useDispatch();
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const user = useSelector((state) => state.user);
+  const token =  useSelector((state) => state.token);
+
+  const handleFriends = async () => {
+    const userFriends = await userApi.getFriends(user._id, token);
+    dispatch(setFriends({ friends: userFriends }));
+  }
+
+  useEffect(() => {
+    handleFriends();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box>
-      <Navbar />
+      <Navbar/>
       <Box
         width="100%"
         padding="2rem 6%"
@@ -32,6 +47,7 @@ const HomePage = () => {
             impressions={user.impressions}
             friends={user.friends}
             picturePath={user.picturePath}
+            isHome={true}
           />
         </Box>
         <Box
@@ -45,7 +61,7 @@ const HomePage = () => {
           <Box flexBasis="26%">
             <AdvertWidget />
             <Box m="2rem 0" />
-            <FriendListWidget userId={user._id} />
+            <FriendListWidget friends={user.friends} user={user} />
           </Box>
         )}
       </Box>

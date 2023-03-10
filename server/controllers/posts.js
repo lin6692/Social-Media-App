@@ -34,10 +34,7 @@ export const createPost = async (req, res) => {
       comments: [],
     });
     await newPost.save();
-
-    const post = await Post.find();
-    post.sort(sortFunc);
-    res.status(201).json(post);
+    res.status(201).json(newPost);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -59,8 +56,7 @@ export const createPostComment = async (req, res) => {
     post.comments.push(savedComment._id);
     await post.save();
 
-    const comments = await Comment.find({ postId: id });
-    res.status(200).json(comments);
+    res.status(200).json(savedComment);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

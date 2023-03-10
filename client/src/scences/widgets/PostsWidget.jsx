@@ -1,61 +1,64 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost, setPosts } from "state";
+import { useState } from "react";
 import { Typography, useTheme } from "@mui/material";
 import PostWidget from "./PostWidget";
 import WidgetWrapper from "components/WidgetWrapper";
+import DialogWidget from "scences/widgets/DialogWidget";
+import Post from "controllers/Post";
 
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const PostsWidget = ({ userId, isProfile=false }) => {
+  const postApi = new Post();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const posts = useSelector((state) => state.posts);
+  const loggedUser = useSelector((state) => state.user);
 
   const { palette } = useTheme();
 
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogContent, setDialogContent] = useState({
+        title: "",
+        context:"",
+        button:"",
+  })
+
+  const handleDialog = () => {
+    const isDialogOpen = !openDialog;
+    setOpenDialog(isDialogOpen);
+}
+
   const getPosts = async () => {
-    const response = await fetch("http://localhost:3001/posts", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts:data }));
+    const newPosts = await postApi.getPosts(token);
+    dispatch(setPosts({ posts:newPosts }));
   };
 
-  const getUserPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    dispatch(setPosts({ posts:data }));
+  const getUserPosts = () => {
+    const newPosts = posts.filter((post)=>{
+      return post.userId === userId;
+    })
+    dispatch(setPosts({ posts:newPosts }));
   };
 
   const patchLike = async (postId) => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: userId }),
-    });
-    const updatedPosts = await response.json();
-    dispatch(setPost({ post: updatedPosts }));
+    const updatedPost = await postApi.likePost(userId, postId, token);
+    dispatch(setPost({ post: updatedPost }));
   };
 
   const deletePost = async (postId) => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: userId }),
-    });
+    const isPostDeleted = await postApi.deletePost(userId, postId, token);
+    
+    if (!isPostDeleted) {
+      setDialogContent({
+        title: "Failed",
+        context: "Something wrong, please refresh the page",
+        button: "OK",
+      })
+      handleDialog();
+      return 
+    }
     const updatedPost = posts.filter((post)=> post._id !== postId);
     dispatch(setPosts({ posts: updatedPost }));
   }
@@ -84,10 +87,9 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       </WidgetWrapper>
     )
   }
-  console.log(posts);
 
   return ( 
-    <>
+    <div>
       {posts.map(
         ({
           _id,
@@ -101,13 +103,13 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           likes,
           comments,
           createdAt,
-          
         }) => (
           <PostWidget
             key={_id}
             postId={_id}
             postUserId={userId}
-            name={`${firstName} ${lastName}`}
+            firstName={firstName}
+            lastName={lastName}
             description={description}
             location={location}
             picturePath={picturePath}
@@ -117,10 +119,19 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             createdAt={createdAt}
             patchLikeCallback={patchLike}
             deletePostCallback={deletePost}
+            isProfile={isProfile}
+            loggedUser={loggedUser}
           />
         )
       )}
-    </>
+       <DialogWidget 
+            open={openDialog} 
+            handleDialogCallback={handleDialog}
+            title={dialogContent.title}
+            context={dialogContent.context}
+            button={dialogContent.button}
+        ></DialogWidget>
+    </div>
     );
 };
 

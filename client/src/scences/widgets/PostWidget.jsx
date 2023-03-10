@@ -11,15 +11,18 @@ import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import UserImage from "components/UserImage";
 import CommentWidget from "./CommentWidget";
+import DialogWidget from "scences/widgets/DialogWidget";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import Comment from "controllers/Comments";
 import moment from "moment";
 
 
 const PostWidget = ({
   postId,
   postUserId,
-  name,
+  firstName,
+  lastName,
   description,
   location,
   picturePath,
@@ -27,15 +30,26 @@ const PostWidget = ({
   likes,
   createdAt,
   patchLikeCallback,
-  deletePostCallback
+  deletePostCallback,
+  isProfile,
+  loggedUser
 }) => {
+  const commentApi = new Comment();
+
   const [isComments, setIsComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
+  const poster = {
+    _id: postUserId,
+    picturePath: userPicturePath,
+    firstName,
+    lastName,
+    location,
+  }
+
   const token = useSelector((state) => state.token);
-  const loggedInUserId = useSelector((state) => state.user._id);
-  const loggedInUserPicturePath = useSelector((state) => state.user.picturePath);
-  const isLiked = Boolean(likes[loggedInUserId]);
+  
+  const isLiked = Boolean(likes[loggedUser._id]);
   const likeCount = Object.keys(likes).length;
   const createdTime = moment(createdAt).fromNow();
 
@@ -44,43 +58,66 @@ const PostWidget = ({
   const primary = palette.primary.main;
   const medium = palette.neutral.medium;
 
-  const addComments = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-       "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId, description:comment }),
-    })
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogContent, setDialogContent] = useState({
+        title: "",
+        context:"",
+        button:"",
+  })
 
-    const updatedComments = await response.json();
+  const handleDialog = () => {
+    const isDialogOpen = !openDialog;
+    setOpenDialog(isDialogOpen);
+  }
+
+  const addComments = async () => {
+    const reqBody = {userId: loggedUser._id, description:comment};
+    const newComment = await commentApi.addComment(postId, token, reqBody);
+    
+    if (!newComment) {
+      setDialogContent({
+        title: "Failed",
+        context: "Whoops, post not found",
+        button: "OK",
+      })
+      handleDialog();
+      return 
+    }
+
+    const updatedComments = [...comments,newComment]
     setComments(updatedComments);
     setComment("");
   }
 
   const getComments = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/comments`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      }
-    });
-    const updatedComments = await response.json();
+    const updatedComments = await commentApi.getComments(postId, token);
+    if (!updatedComments) {
+      setDialogContent({
+        title: "Failed",
+        context: "Whoops, post not found",
+        button: "OK",
+      })
+      handleDialog();
+      return 
+    }
     setComments(updatedComments);
   }
 
   const deleteComment = async (commentId) => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/comment`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId, commentId: commentId}),
+    const reqBody = { userId: loggedUser._id, commentId: commentId};
+    const isCommentDeleted = await commentApi.deleteComments(postId, token, reqBody);
+    if (!isCommentDeleted) {
+      setDialogContent({
+        title: "Failed",
+        context: "Whoops, post or comment not found",
+        button: "OK",
+      })
+      handleDialog();
+      return 
+    }
+    const updatedComments = comments.filter((comment)=>{
+      return comment._id !== commentId;
     })
-    const updatedComments = await response.json();
     setComments(updatedComments);
   }
 
@@ -91,10 +128,9 @@ const PostWidget = ({
   return (
     <WidgetWrapper m="0 0 2rem 0">
       <Friend
-        friendId={postUserId}
-        name={name}
-        subtitle={location}
-        userPicturePath={userPicturePath}
+        friend={poster}
+        user={loggedUser}
+        isProfile={isProfile}
       />
       <Typography color={medium} sx={{ mt: "0.2rem" }}>
         {createdTime}
@@ -135,7 +171,7 @@ const PostWidget = ({
         </FlexBetween>
 
         <IconButton onClick={() => deletePostCallback(postId)}>
-          { loggedInUserId === postUserId ? (
+          { loggedUser._id === postUserId ? (
               <DeleteOutlined />
             ) : null
           }  
@@ -145,7 +181,7 @@ const PostWidget = ({
       {isComments && (
         <Box mt="0.5rem">
           <FlexBetween gap="0.5rem">
-            <UserImage image={loggedInUserPicturePath} size={"40px"}/>
+            <UserImage image={loggedUser.picturePath} size={"40px"}/>
             <InputBase
               placeholder="What's on your mind..."
               onChange={(e) => setComment(e.target.value)}
@@ -168,6 +204,13 @@ const PostWidget = ({
           <Divider />
         </Box>
       )}
+      <DialogWidget 
+        open={openDialog} 
+        handleDialogCallback={handleDialog}
+        title={dialogContent.title}
+        context={dialogContent.context}
+        button={dialogContent.button}
+      ></DialogWidget>
     </WidgetWrapper>
   );
 };

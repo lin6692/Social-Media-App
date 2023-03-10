@@ -19,9 +19,9 @@ const UserWidget = ({
     viewedProfile,
     impressions,
     friends, 
-    picturePath
+    picturePath,
+    isHome
 }) => {
-
     const { palette } = useTheme();
     const navigate = useNavigate();
     const dark = palette.neutral.dark;
@@ -34,7 +34,6 @@ const UserWidget = ({
             <FlexBetween
                 gap="0.5rem"
                 pd="1.1rem"
-                
             >
                 <FlexBetween gap="1rem">
                     <UserImage image={picturePath} />
@@ -56,7 +55,7 @@ const UserWidget = ({
                         <Typography color={medium}>{friends ? friends.length : 0 } friends</Typography>       
                     </Box>
                 </FlexBetween>
-                <ManageAccountsOutlined />
+                {isHome && (<ManageAccountsOutlined />)}
             </FlexBetween>
 
             <Divider sx={{ margin: "1.25rem 0 0 0" }}/>
@@ -108,7 +107,7 @@ const UserWidget = ({
                             <Typography color={medium}>Social Network</Typography>
                         </Box>
                     </FlexBetween>
-                    <EditOutlined sx={{ color: main }} />
+                    {isHome && <EditOutlined sx={{ color: main }} />}
                 </FlexBetween>
 
                 <FlexBetween gap="1rem">
@@ -121,7 +120,7 @@ const UserWidget = ({
                             <Typography color={medium}>Network Platform</Typography>
                         </Box>
                     </FlexBetween>
-                    <EditOutlined sx={{ color: main }} />
+                    {isHome && <EditOutlined sx={{ color: main }} />}
                 </FlexBetween>
             </Box>
 
