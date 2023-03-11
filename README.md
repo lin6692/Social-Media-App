@@ -51,3 +51,23 @@ This is a social media website built using the **MERN stack** (MongoDB, Express.
 ## Credits
 
 Created by **Lin Liu**
+
+## Screenshots
+### Home Page
+<img width="1337" alt="Home Page" src="https://user-images.githubusercontent.com/68915147/224514152-edfb5a01-f0bf-420e-a426-95210fe83709.png">
+
+### Profile Page
+<img width="1337" alt="Profile Page 2023-03-11 at 5 24 20 PM" src="https://user-images.githubusercontent.com/68915147/224514187-1e010b7c-a48c-419a-bafb-c73f96d45df1.png">
+
+### Login Page
+<img width="1337" alt="Login Page" src="https://user-images.githubusercontent.com/68915147/224514212-e0f6cd85-5e29-46ce-8c13-f9c90b4ddfc7.png">
+
+### Register Page
+<img width="1337" alt="Register Page" src="https://user-images.githubusercontent.com/68915147/224514226-7f91d9eb-b18d-40d2-8c63-2fa0e670acba.png">
+
+### Night Mode
+<img width="1337" alt="Night Mode" src="https://user-images.githubusercontent.com/68915147/224514234-5bd41ec6-2bf6-4447-b821-bd4bfe4378b5.png">
+
+### Mobile
+<img width="1337" alt="Mobile" src="https://user-images.githubusercontent.com/68915147/224514243-bc87e0f1-dbb0-46ed-ae4d-062bcea2f0e9.png">
+
