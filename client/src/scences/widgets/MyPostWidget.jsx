@@ -11,7 +11,6 @@ import {
   useTheme,
   Button,
   IconButton,
-  useMediaQuery,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
@@ -25,7 +24,6 @@ import Post from "controllers/Post";
 const MyPostWidget = ({ picturePath }) => {
   const postApi = new Post();
   const dispatch = useDispatch();
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
