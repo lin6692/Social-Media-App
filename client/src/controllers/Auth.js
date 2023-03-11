@@ -1,14 +1,12 @@
 export default class Auth {
-  async createUser(data) {
+  async createUser(formData) {
     const savedUserResponse = await fetch(
       "http://localhost:3001/auth/register",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formData,
       }
     );
-
     const savedUser = await savedUserResponse.json();
     return savedUser;
   }
@@ -19,7 +17,6 @@ export default class Auth {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-
     const loggedIn = await loggedInResponse.json();
     return loggedIn;
   }

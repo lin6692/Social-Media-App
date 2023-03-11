@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
-import Auth from "controllers/Auth.js";
+import Auth from "controllers/Auth";
 
 const registerSchema = yup.object().shape({
     firstName: yup.string().required("required"),
@@ -50,8 +50,9 @@ const initialValuesLogin = {
 const Form = ({
     handleDialogCallback,
     handleDialogContentCallback
-    }) => {
-    const auth = new Auth();
+}) => {
+    const authApi = new Auth();
+
     const [pageType, setPageType] = useState("login");
     const { palette } = useTheme();
     const dispatch = useDispatch();
@@ -61,9 +62,13 @@ const Form = ({
     const isRegister = pageType === "register";
 
     const register = async (values, onSubmitProps) => {
-        const savedUser = await auth.createUser(values);
-        onSubmitProps.resetForm();
+        const formData = new FormData();
+        for (let value in values) {
+            formData.append(value, values[value]);
+        }
+        formData.append('picturePath', values.picture.name);
 
+        const savedUser = await authApi.createUser(formData);
         if (savedUser.resgistered) {
             handleDialogContentCallback(
                 savedUser.title,
@@ -73,6 +78,7 @@ const Form = ({
             handleDialogCallback();
             return
         }
+        onSubmitProps.resetForm();
 
         if (savedUser) {
             setPageType("login");
@@ -80,7 +86,7 @@ const Form = ({
     };
 
     const login = async (values, onSubmitProps) => {
-        const loggedIn = await auth.login(values);
+        const loggedIn = await authApi.login(values);
         onSubmitProps.resetForm();
 
         if (!loggedIn.logged) {
@@ -140,7 +146,7 @@ const Form = ({
                                 label="First Name"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.firstName || ""}
+                                value={values.firstName}
                                 name="firstName"
                                 error={Boolean(touched.firstName) && Boolean(errors.firstName)}
                                 helperText={touched.firstName && errors.firstName}
@@ -150,7 +156,7 @@ const Form = ({
                                 label="Last Name"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.lastName || ""}
+                                value={values.lastName}
                                 name="lastName"
                                 error={Boolean(touched.lastName) && Boolean(errors.lastName)}
                                 helperText={touched.lastName && errors.lastName}
@@ -160,7 +166,7 @@ const Form = ({
                                 label="Location"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.location || ""}
+                                value={values.location}
                                 name="location"
                                 error={Boolean(touched.location) && Boolean(errors.location)}
                                 helperText={touched.location && errors.location}
@@ -170,7 +176,7 @@ const Form = ({
                                 label="Occupation"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.occupation || ""}
+                                value={values.occupation}
                                 name="occupation"
                                 error={Boolean(touched.occupation) && Boolean(errors.occupation)}
                                 helperText={touched.occupation && errors.occupation}

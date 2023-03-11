@@ -43,7 +43,7 @@ const PostsWidget = ({ userId, isProfile=false }) => {
   };
 
   const patchLike = async (postId) => {
-    const updatedPost = await postApi.likePost(userId, postId, token);
+    const updatedPost = await postApi.likePost(loggedUser._id, postId, token);
     dispatch(setPost({ post: updatedPost }));
   };
 
