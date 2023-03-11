@@ -24,7 +24,7 @@ const registerSchema = yup.object().shape({
     password: yup.string().required("required"),
     location: yup.string().required("required"),
     occupation: yup.string().required("required"),
-    picture: yup.string().required("required"),
+    picture: yup.string()
 });
 
 const loginSchema = yup.object().shape({
@@ -66,7 +66,13 @@ const Form = ({
         for (let value in values) {
             formData.append(value, values[value]);
         }
-        formData.append('picturePath', values.picture.name);
+        if (values.picture) {
+            formData.append('picturePath', values.picture.name);
+        } else {
+            // set default avatar
+            formData.append('picturePath', "default.jpeg");
+        }
+        
 
         const savedUser = await authApi.createUser(formData);
         if (savedUser.resgistered) {
