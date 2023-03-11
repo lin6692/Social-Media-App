@@ -67,7 +67,7 @@ const ProfilePage = () => {
             handleFriendsCallback={handleFriends}
           />
           <Box m="2rem 0" />
-          <FriendListWidget friends={friends}/>
+          <FriendListWidget friends={friends} handleFriendsCallback={handleFriends} isLoggedUser={isLoggedUser}/>
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}

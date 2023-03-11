@@ -32,7 +32,7 @@ const PostWidget = ({
   patchLikeCallback,
   deletePostCallback,
   isProfile,
-  loggedUser
+  loggedUser,
 }) => {
   const commentApi = new Comment();
 

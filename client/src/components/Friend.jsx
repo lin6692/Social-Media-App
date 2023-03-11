@@ -7,7 +7,7 @@ import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import User from "controllers/User";
 
-const Friend = ({ friend }) => {
+const Friend = ({ friend, handleFriendsCallback=null, isLoggedUser=false, isProfile=false }) => {
   const userApi = new User();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,6 +27,10 @@ const Friend = ({ friend }) => {
     const data = await userApi.patchFriend(loggedUser._id, token, friend._id);
     // Update current user friends
     dispatch(setFriends({ friends: data }));
+
+    if (isLoggedUser) {
+      handleFriendsCallback(data);
+    } 
   };
 
   return (
@@ -57,7 +61,7 @@ const Friend = ({ friend }) => {
           </Typography>
         </Box>
       </FlexBetween>
-        {(friend._id!== loggedUser._id) && (
+        {(friend._id!== loggedUser._id && !isProfile) && (
           <IconButton
           onClick={() => patchFriend()}
           sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
