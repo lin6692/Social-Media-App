@@ -4,26 +4,24 @@
 
 This is a social media website built using the **MERN stack** (MongoDB, Express.js, React.js, and Node.js) to deliver a fast, responsive, and intuitive user experience.
 
-create/delete posts and comments, add/remove friends, and switch to night mode. The website is also responsive to small screens such as mobile devices. Error handling has been implemented for duplicate users and invalid operations such as delete an unexisiting comments.
-
 ## Features
 
-User registration and login
-Create/Delete/Like posts
-Create/Delete comments
-Add/Remove friends
-Night mode switch
-Error handling for duplicate users and invalid operations
-Responsive to small screens
-File handling (Allow user to upload image)
+- User registration and login
+- Create/Delete/Like posts
+- Create/Delete comments
+- Add/Remove friends
+- Night mode switch
+- Error handling for duplicate users and invalid operations
+- Responsive to small screens
+- File handling (Allow user to upload image)
 
 ## Technologies Used
 
-MongoDB
-Express.js
-React.js
-Node.js
-JavaScript
+- MongoDB
+- Express.js
+- React.js
+- Node.js
+- JavaScript
 
 ## Installation
 
@@ -32,11 +30,11 @@ JavaScript
    **Server Folder:**
 
    - Add .env File to the root of the server folder
-     MONGO_URL = "Replae with your MongoDB access"
-     JWT_SECRET = "Replace wth random string at your choice"
-     PORT = 3001
+     - `MONGO_URL = "Replae with your MongoDB access"`
+     - `JWT_SECRET = "Replace wth random string at your choice"`
+     - `PORT = 3001`
    - Navigate to **server/index.js**, uncomment line 67-68 to load the example data.
-     You only need to load the data once. Please comment these lines out when you done.
+     - You only need to load the data once. Please comment these lines out when you done.
    - Run `npm install` to install dependencies.
    - Run `nodemon run` to start the backend server in development mode.
 
