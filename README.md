@@ -30,8 +30,8 @@ This is a social media website built using the **MERN stack** (MongoDB, Express.
    **Server Folder:**
 
    - Add .env File to the root of the server folder
-     - `MONGO_URL = "Replae with your MongoDB access"`
-     - `JWT_SECRET = "Replace wth random string at your choice"`
+     - `MONGO_URL = "Replace it with your MongoDB access"`
+     - `JWT_SECRET = "Replace it with random string at your choice"`
      - `PORT = 3001`
    - Navigate to **server/index.js**, uncomment line 67-68 to load the example data.
      - You only need to load the data once. Please comment these lines out when you done.
