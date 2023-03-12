@@ -1,6 +1,7 @@
 export default class Comment {
   async addComment(postId, token, body) {
-    const response = await fetch(`${process.env.SERVER_URL}/posts/${postId}`, {
+    const url = `https://social-media-server-25d3.onrender.com/posts/${postId}`;
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -18,16 +19,14 @@ export default class Comment {
   }
 
   async getComments(postId, token) {
-    const response = await fetch(
-      `${process.env.SERVER_URL}/posts/${postId}/comments`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const url = `https://social-media-server-25d3.onrender.com/posts/${postId}/comments`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (response.status !== 200) {
       return false;
@@ -38,17 +37,15 @@ export default class Comment {
   }
 
   async deleteComments(postId, token, body) {
-    const response = await fetch(
-      `${process.env.SERVER_URL}/posts/${postId}/comment`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      }
-    );
+    const url = `https://social-media-server-25d3.onrender.com/posts/${postId}/comment`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
 
     return response.status === 200;
   }

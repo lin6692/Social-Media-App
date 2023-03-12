@@ -58,6 +58,8 @@ const PostWidget = ({
   const primary = palette.primary.main;
   const medium = palette.neutral.medium;
 
+  const srcPath = `https://social-media-server-25d3.onrender.com/assets/${picturePath}`
+
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState({
         title: "",
@@ -145,7 +147,7 @@ const PostWidget = ({
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`${process.env.SERVER_URL}/assets/${picturePath}`}
+          src={srcPath}
         />
       )}
       <FlexBetween mt="0.25rem">

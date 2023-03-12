@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 
 const UserImage = ({ image, size="60px" }) => {
+    const path = `https://social-media-server-25d3.onrender.com/assets/${image}`
     return (
         <Box width={size} height={size}>
             <img
@@ -8,7 +9,7 @@ const UserImage = ({ image, size="60px" }) => {
                 width={size}
                 height={size}
                 alt="user"
-                src={`${process.env.SERVER_URL}/assets/${image}`}
+                src={path}
             />
         </Box>
     );

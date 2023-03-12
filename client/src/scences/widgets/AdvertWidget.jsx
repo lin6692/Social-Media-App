@@ -7,6 +7,7 @@ const AdvertWidget = () => {
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
+  const srcPath = "https://social-media-server-25d3.onrender.com/assets/myProfile.png"
 
   return (
     <WidgetWrapper>
@@ -20,7 +21,7 @@ const AdvertWidget = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src={`${process.env.SERVER_URL}/assets/myProfile.png`}
+        src={srcPath}
         style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
       />
       </a>

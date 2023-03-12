@@ -24,8 +24,9 @@ import {
 
     
     const getCommenter = async () => {
+        const url = `https://social-media-server-25d3.onrender.com/users/${comment.userId}`;
         const response = await fetch(
-            `${process.env.SERVER_URL}/users/${comment.userId}`,
+            url,
             {
               method: "GET",
               headers: { Authorization: `Bearer ${token}` },
