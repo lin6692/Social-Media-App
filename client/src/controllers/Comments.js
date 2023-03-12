@@ -1,6 +1,6 @@
 export default class Comment {
   async addComment(postId, token, body) {
-    const response = await fetch(`http://localhost:3001/posts/${postId}`, {
+    const response = await fetch(`${process.env.SERVER_URL}/posts/${postId}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -19,7 +19,7 @@ export default class Comment {
 
   async getComments(postId, token) {
     const response = await fetch(
-      `http://localhost:3001/posts/${postId}/comments`,
+      `${process.env.SERVER_URL}/posts/${postId}/comments`,
       {
         method: "GET",
         headers: {
@@ -39,7 +39,7 @@ export default class Comment {
 
   async deleteComments(postId, token, body) {
     const response = await fetch(
-      `http://localhost:3001/posts/${postId}/comment`,
+      `${process.env.SERVER_URL}/posts/${postId}/comment`,
       {
         method: "DELETE",
         headers: {

@@ -25,7 +25,7 @@ import {
     
     const getCommenter = async () => {
         const response = await fetch(
-            `http://localhost:3001/users/${comment.userId}`,
+            `${process.env.SERVER_URL}/users/${comment.userId}`,
             {
               method: "GET",
               headers: { Authorization: `Bearer ${token}` },

@@ -1,6 +1,6 @@
 export default class User {
   async getUser(userId, token) {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`${process.env.SERVER_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -10,7 +10,7 @@ export default class User {
 
   async getFriends(userId, token) {
     const response = await fetch(
-      `http://localhost:3001/users/${userId}/friends`,
+      `${process.env.SERVER_URL}/users/${userId}/friends`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -22,7 +22,7 @@ export default class User {
 
   async patchFriend(userId, token, friendId) {
     const response = await fetch(
-      `http://localhost:3001/users/${userId}/${friendId}`,
+      `${process.env.SERVER_URL}/users/${userId}/${friendId}`,
       {
         method: "PATCH",
         headers: {
